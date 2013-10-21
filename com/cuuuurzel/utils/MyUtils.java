@@ -1,13 +1,6 @@
 package com.cuuuurzel.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Calendar;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -20,6 +13,7 @@ import android.view.WindowManager;
 /**
  * Set of useful and useless functions.
  */
+@SuppressLint("DefaultLocale")
 public class MyUtils {
 
 	/**
@@ -170,6 +164,7 @@ public class MyUtils {
 	 * Returns the device name in lower case, for example :
 	 * lg nexus 4
 	 */
+	@SuppressLint("DefaultLocale")
 	public static String getDeviceName() {
 		String manufacturer = Build.MANUFACTURER.toLowerCase();
 		String model = Build.MODEL.toLowerCase();

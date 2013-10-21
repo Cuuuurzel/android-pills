@@ -1,4 +1,4 @@
-package com.cuuuurzel.utils;
+package com.cuuuurzel.utils.showcase;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -25,7 +25,7 @@ public class ImageAdapter extends BaseAdapter {
      *     new Integer[]{ R.drawable.img1, R.drawable.img2, ... }
      */
     public ImageAdapter( Context c, Integer[] ids ) {
-        this( c, 0, 0, ids );     
+        this( c, ids, 0, 0 );     
     }
 
     /**
@@ -37,9 +37,9 @@ public class ImageAdapter extends BaseAdapter {
      * @param fixedImageHeight, fixed image height in pixel.
      */
     public ImageAdapter( Context c, 
+                         Integer[] ids, 
     		             float fixedImageWidth, 
-    		             float fixedImageHeight, 
-    		             Integer[] ids ) {
+    		             float fixedImageHeight ) {
         this.mContext = c;
         this.mThumbIds = ids;
         this.fixedImageWidth = fixedImageWidth;
