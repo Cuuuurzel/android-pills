@@ -15,6 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Scroller;
 
+/**
+ * Horizontal image showcase.
+ */
 public class ImageShowcase extends AdapterView<ImageAdapter> {
 
 	public boolean mAlwaysOverrideTouch = true;
@@ -34,6 +37,9 @@ public class ImageShowcase extends AdapterView<ImageAdapter> {
     private float fixedImageHeight = 0;
     protected int firstShownView = 0;
     
+	/**
+	 * Creates the view.
+	 */
 	public ImageShowcase( Context context, AttributeSet a ) {
 		super( context, a );
 		initView();
@@ -49,16 +55,25 @@ public class ImageShowcase extends AdapterView<ImageAdapter> {
 		mScroller = new Scroller(getContext());
 		mGesture = new GestureDetector(getContext(), mOnGesture);
 	}
-	
+
+	/**
+	 * Returns the first view.
+	 */
 	public int getFirstShownView() {
 		return firstShownView;
 	}
 	
+	/**
+	 * Use this method to provide a custom "OnItemClick" listener.
+	 */
 	@Override
 	public void setOnItemClickListener( AdapterView.OnItemClickListener listener ) {
 		mOnItemClicked = listener;
 	}
 
+	/**
+	 * Use this method to set fixed items size.
+	 */
 	public void setFixedItemSize( float w, float h ) { 
 	    fixedImageWidth = w;
 	    fixedImageHeight = h;
@@ -83,17 +98,17 @@ public class ImageShowcase extends AdapterView<ImageAdapter> {
 		}
 	};
 
+	/**
+	 * Returns the adapter of this view.
+	 */
 	@Override
 	public ImageAdapter getAdapter() {
 		return mAdapter;
 	}
 
-	@Override
-	public View getSelectedView() {
-		// TODO: implement
-		return null;
-	}
-
+	/**
+	 * Use this method to set the adapter for this view.
+	 */
 	public void setAdapter( ImageAdapter adapter ) {
 		if (mAdapter != null) {
 			mAdapter.unregisterDataSetObserver(mDataObserver);
@@ -260,11 +275,17 @@ public class ImageShowcase extends AdapterView<ImageAdapter> {
 		}
 	}
 
+	/**
+	 * Scroll the view on the horizontal axis.
+	 */
 	public synchronized void scrollTo(int x) {
 		mScroller.startScroll(mNextX, 0, x - mNextX, 0);
 		requestLayout();
 	}
 
+	/**
+	 * Used to dispatch touch events.
+	 */
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		boolean handled = super.dispatchTouchEvent(ev);
@@ -343,5 +364,15 @@ public class ImageShowcase extends AdapterView<ImageAdapter> {
 	};
 
 	@Override
-	public void setSelection(int position) {}
+	public void setSelection(int arg0) {
+		throw new UnsupportedOperationException( 
+			"Currently not implemented!!" 
+		);
+	}
+	
+	public View getSelectedView() {
+		throw new UnsupportedOperationException( 
+			"Currently not implemented!!" 
+		);
+	}
 }

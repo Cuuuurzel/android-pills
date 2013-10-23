@@ -1,11 +1,14 @@
 package com.cuuuurzel.utils.showcase;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 
+/**
+ * This class extends my image showcase and add it the possibility to open a Dialog when an element is clicked.
+ */
 public class DetailedShowcase extends ImageShowcase {
 
 	private DetailDialogBuilder mDialogBuilder;
@@ -16,13 +19,13 @@ public class DetailedShowcase extends ImageShowcase {
 		this.setOnItemClickListener();
 	}
 	
-	private AlertDialog getDialog( AdapterView<?> a, View v, int p, long i ) {
+	private Dialog getDialog( AdapterView<?> a, View v, int p, long i ) {
 		if ( mDialogBuilder == null ) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(
+			Dialog d = new Dialog(
 				getContext()
 			);
-			builder.setTitle( "Default dialog" );
-			return builder.create();
+			d.setTitle( "Default dialog" );
+			return d;
 		} else {
 			return mDialogBuilder.buildDialog( 
 				getContext(), a, v, p, i 
@@ -44,10 +47,17 @@ public class DetailedShowcase extends ImageShowcase {
     	);
 	}
 
+	/**
+	 * Use this method to suppy a custom dialog builder.
+     * The "buildDialog" method is called every time an item is clicked.
+	 */
 	public void setDetailDialogBuilder( DetailDialogBuilder b ) {
 		this.mDialogBuilder = b;
 	}
 
+	/**
+	 * Returns the position of the last clicked item.
+	 */
 	public int getLastClickedPosition() {
 		return mLastClickedPosition;
 	}
