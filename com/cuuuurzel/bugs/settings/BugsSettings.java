@@ -14,15 +14,13 @@ import com.cuuuurzel.bugs.R;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.SparseArray;
 
 public class BugsSettings implements Serializable {
 	
 	private static final long serialVersionUID = 1017;
 	private static final String path = "settings";
 	private static final String TAG = "Bugs Settings";
-
-	public BugInfo[][] bugsdata;
-	public SetInfo[] setsdata;
 
 	public static Integer[] icons = new Integer[] {
 		R.drawable.i00, 
@@ -55,13 +53,17 @@ public class BugsSettings implements Serializable {
 	public static int default_bug_size = 150;
 	public static int default_bug_speed = 150;
 
+	public BugInfo[][] bugsdata;
+	public SetInfo[] setsdata;
+	public SparseArray<Integer> setsIds;
+	
 	public static BugsSettings getInstance( Context c ) {
-		BugsSettings bs = new BugsSettings();
+		BugsSettings bs = BugsSettings.getDefault( c );
 		try {
 			bs.load( c );
 		} catch ( InvalidClassException e ) {
 			try {
-				BugsSettings.getDefault( c ).save( c );
+				bs.save( c );
 			} catch ( IOException e1 ) {
 			}
 			return BugsSettings.getInstance( c );
@@ -70,6 +72,10 @@ public class BugsSettings implements Serializable {
 		}
 		return bs;
 	}	
+	
+	public BugsSettings() {
+		this.setupIdsArray();
+	}
 	
 	private static BugsSettings getDefault( Context c ) {
 		BugsSettings bs = new BugsSettings();
@@ -86,10 +92,8 @@ public class BugsSettings implements Serializable {
 				);
 			}
 		}
-
 		bs.setsdata[ 0 ].usable = true;
-		bs.setsdata[ 0 ].bought = true;
-		
+		bs.setsdata[ 0 ].bought = true;		
 		return bs;
 	}
 	
@@ -158,19 +162,56 @@ public class BugsSettings implements Serializable {
 	public boolean isSetUsable( int s ) {
 		return setsdata[ s ].usable;
 	} 
-	
+
 	private boolean isBugShowable( int s, int p ) {
 		return setsdata[s].usable && bugsdata[s][p].isShown;
 	}
 	
-	public Integer[] getIds( boolean usableSets ) {
-		ArrayList<Integer> sets = new ArrayList<Integer>();
+	public Integer[] getSetsIcons( boolean usableSets ) {
+		ArrayList<Integer> usables = new ArrayList<Integer>();
+		ArrayList<Integer> locked = new ArrayList<Integer>();
+		
 		for ( int i=0; i<setsdata.length; i++ ) {
-			if ( setsdata[ i ].bought && setsdata[ i ].usable ) {
-				sets.add( i );
+			if ( setsdata[ i ].bought ) {
+				usables.add( icons[ i ] );
+			} else {
+				locked.add( icons[ i ] );
 			}
+		} 
+		
+		if ( usableSets ) {
+			return usables.toArray( new Integer[]{} );
+		} else {
+			return locked.toArray( new Integer[]{} );
 		}
-		return sets.toArray( new Integer[]{} );
+	}
+	
+	private void setupIdsArray() {
+		setsIds = new SparseArray<Integer>();		
+		for ( int s=0; s<n_sets; s++ ) {
+			for ( int b=0; b<set_lenght; b++ ) {
+				setsIds.append( ids[s][b], s );			
+			}			
+		}
+	}
+	
+	public Integer[] getSets( boolean usableSets ) {
+		ArrayList<Integer> usables = new ArrayList<Integer>();
+		ArrayList<Integer> locked = new ArrayList<Integer>();
+		
+		for ( int i=0; i<setsdata.length; i++ ) {
+			if ( setsdata[ i ].bought ) {
+				usables.add( i );
+			} else {
+				locked.add( i );
+			}
+		} 
+		
+		if ( usableSets ) {
+			return usables.toArray( new Integer[]{} );
+		} else {
+			return locked.toArray( new Integer[]{} );
+		}
 	}
 	
 	public int[] randomBugKind() {
@@ -204,5 +245,9 @@ public class BugsSettings implements Serializable {
 			}
 		}
 		return i;
+	}
+	
+	public int getSet( int drawable ) {
+		return setsIds.get( drawable );
 	}
 }

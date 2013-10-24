@@ -20,21 +20,22 @@ import android.widget.Scroller;
  */
 public class ImageShowcase extends AdapterView<ImageAdapter> {
 
-	public boolean mAlwaysOverrideTouch = true;
+	protected boolean mAlwaysOverrideTouch = true;
 	protected ImageAdapter mAdapter;
-	private int mLeftViewIndex = -1;
-	private int mRightViewIndex = 0;
+	protected Context mContext;
+	protected int mLeftViewIndex = -1;
+	protected int mRightViewIndex = 0;
 	protected int mCurrentX;
 	protected int mNextX;
-	private int mMaxX = Integer.MAX_VALUE;
-	private int mDisplayOffset = 0;
+	protected int mMaxX = Integer.MAX_VALUE;
+	protected int mDisplayOffset = 0;
 	protected Scroller mScroller;
-	private GestureDetector mGesture;
-	private Queue<ImageView> mRemovedViewQueue = new LinkedList<ImageView>();
-	private OnItemClickListener mOnItemClicked;
-	private boolean mDataChanged = false;
-    private float fixedImageWidth = 0;
-    private float fixedImageHeight = 0;
+	protected GestureDetector mGesture;
+	protected Queue<ImageView> mRemovedViewQueue = new LinkedList<ImageView>();
+	protected OnItemClickListener mOnItemClicked;
+	protected boolean mDataChanged = false;
+	protected float fixedImageWidth = 0;
+	protected float fixedImageHeight = 0;
     protected int firstShownView = 0;
     
 	/**
@@ -42,6 +43,7 @@ public class ImageShowcase extends AdapterView<ImageAdapter> {
 	 */
 	public ImageShowcase( Context context, AttributeSet a ) {
 		super( context, a );
+		mContext = context;
 		initView();
 	}
 

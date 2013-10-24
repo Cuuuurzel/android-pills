@@ -13,6 +13,8 @@ public class DetailedShowcase extends ImageShowcase {
 
 	private DetailDialogBuilder mDialogBuilder;
 	private int mLastClickedPosition;
+	private View mLastClickedView;
+	protected long mLastClickedId;
 	
 	public DetailedShowcase( Context c, AttributeSet a ) {
 		super( c, a );
@@ -42,6 +44,8 @@ public class DetailedShowcase extends ImageShowcase {
     			public void onItemClick( AdapterView<?> a, View v, int p, long i ) {
     				getDialog( a, v, p, i ).show();
     				mLastClickedPosition = p;
+    				mLastClickedId = i;
+    				mLastClickedView = v;
     			}    			
         	}
     	);
@@ -58,7 +62,21 @@ public class DetailedShowcase extends ImageShowcase {
 	/**
 	 * Returns the position of the last clicked item.
 	 */
+	public long getLastClickedId() {
+		return mLastClickedId;
+	}
+
+	/**
+	 * Returns the position of the last clicked item.
+	 */
 	public int getLastClickedPosition() {
 		return mLastClickedPosition;
+	}
+
+	/**
+	 * Returns clicked view.
+	 */
+	public View getLastClickedView() {
+		return mLastClickedView;
 	}
 }

@@ -34,11 +34,12 @@ import android.widget.Toast;
 public class SetsShowcase extends Activity implements DetailDialogBuilder {
 		
 	private static int not = 0; //Just a debug thing...
-    private DetailedShowcase mShowcase;
+	private static final String TAG = "Sets Showcase";
+    private DetailedShowcase mShowcase1;
     private DetailedShowcase mShowcase2;
     private Dialog mDialog;
     private BugsSettings mSettings;
-	private static final String TAG = "Sets Showcase";
+    private Context mContext;
 	
 	private OnItemClickListener mOnBugsGridItemClickListener = 
 	new OnItemClickListener() {
@@ -49,7 +50,8 @@ public class SetsShowcase extends Activity implements DetailDialogBuilder {
 				SetsShowcase.this, 
 				BugFocus.class 
 			);
-			intent.putExtra( "set", mShowcase.getLastClickedPosition() );
+
+			intent.putExtra( "set", mSettings.getSet( (int)i ) );
 			intent.putExtra( "position", p );
 			startActivityForResult( intent, 0 );	
 		}    			
@@ -61,35 +63,34 @@ public class SetsShowcase extends Activity implements DetailDialogBuilder {
 		startService( new Intent( this, BugsService.class ) );
 		startService( new Intent( this, NotificationService.class ) );
 		setContentView( R.layout.sets_showcase );
-		mSettings = BugsSettings.getInstance( getApplicationContext() );
+		mContext = getApplicationContext();
+		mSettings = BugsSettings.getInstance( mContext );
 		this.setupSetsView();
 		this.toastStartMsg();
 	}
 
     public void setupSetsView() {
-    	mShowcase = (DetailedShowcase) findViewById( 
-        	R.id.hview 
-        );
-    	mShowcase.setAdapter( 
-           	new BugsImageAdapter( this, false )
-       	);
-    	mShowcase.setFixedItemSize( 
-			MyUtils.screenW( getApplicationContext() ) / 3,
-			MyUtils.screenW( getApplicationContext() ) / 3    			
+    	mShowcase1 = setupShowcase( 
+    		R.id.hview, 
+    		mSettings.getSetsIcons( true ) 
     	);
-    	mShowcase.setDetailDialogBuilder( this );
-
-    	mShowcase2 = (DetailedShowcase) findViewById( 
-        	R.id.hview2 
-        );
-    	mShowcase2.setAdapter( 
-       		new BugsImageAdapter( this, true )
-       	);
-    	mShowcase2.setFixedItemSize( 
-			MyUtils.screenW( getApplicationContext() ) / 3,
-			MyUtils.screenW( getApplicationContext() ) / 3    			
+    	mShowcase2 = setupShowcase( 
+    		R.id.hview2, 
+    		mSettings.getSetsIcons( false ) 
     	);
-    	mShowcase2.setDetailDialogBuilder( this );
+    }
+    
+    private DetailedShowcase setupShowcase( int id, Integer[] ids ) {
+    	DetailedShowcase showcase = (DetailedShowcase) findViewById( id );
+    	showcase.setAdapter( 
+    		new ImageAdapter( mContext, ids ) 
+    	);
+    	showcase.setFixedItemSize( 
+    		MyUtils.screenW( mContext ) / 3,
+    		MyUtils.screenW( mContext ) / 3    			
+        );
+    	showcase.setDetailDialogBuilder( this ); 	
+    	return showcase;
     }
     
     public void test() {
@@ -216,7 +217,8 @@ public class SetsShowcase extends Activity implements DetailDialogBuilder {
 	*/		
 		bugs.setAdapter(
 			new ImageAdapter( 
-				c,  BugsSettings.ids[ p ],
+				c,
+				BugsSettings.ids[ mSettings.getSet( (int)i ) ],
 				MyUtils.screenW( c ) / 4,
 				MyUtils.screenW( c ) / 4
 			)

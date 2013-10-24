@@ -13,10 +13,10 @@ import android.widget.ImageView;
  */
 public class ImageAdapter extends BaseAdapter {
 	
-    private Context mContext;
-    private Integer[] mThumbIds;
-    private float fixedImageWidth;
-    private float fixedImageHeight;
+    protected Context mContext;
+    protected Integer[] mThumbIds;
+    protected float fixedImageWidth;
+    protected float fixedImageHeight;
     
     /**
      * @param c, the application context.
