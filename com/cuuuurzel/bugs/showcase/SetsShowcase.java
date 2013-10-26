@@ -33,29 +33,12 @@ import android.widget.Toast;
 
 public class SetsShowcase extends Activity implements DetailDialogBuilder {
 		
-	private static int not = 0; //Just a debug thing...
 	private static final String TAG = "Sets Showcase";
     private DetailedShowcase mShowcase1;
-    private DetailedShowcase mShowcase2;
     private Dialog mDialog;
     private BugsSettings mSettings;
     private Context mContext;
-	
-	private OnItemClickListener mOnBugsGridItemClickListener = 
-	new OnItemClickListener() {
-		
-		@Override
-		public void onItemClick( AdapterView<?> a, View v, int p, long i ) {
-			Intent intent = new Intent(
-				SetsShowcase.this, 
-				BugFocus.class 
-			);
-
-			intent.putExtra( "set", mSettings.getSet( (int)i ) );
-			intent.putExtra( "position", p );
-			startActivityForResult( intent, 0 );	
-		}    			
-	};
+	private int notificationId;
     
 	@Override
 	public void onCreate( Bundle b ) {
@@ -67,21 +50,26 @@ public class SetsShowcase extends Activity implements DetailDialogBuilder {
 		mSettings = BugsSettings.getInstance( mContext );
 		this.setupSetsView();
 		this.toastStartMsg();
+		this.fixNotifications();
 	}
 
-    public void setupSetsView() {
-    	mShowcase1 = setupShowcase( 
-    		R.id.hview, 
-    		mSettings.getSetsIcons( true ) 
-    	);
-    	mShowcase2 = setupShowcase( 
-    		R.id.hview2, 
-    		mSettings.getSetsIcons( false ) 
-    	);
+	private void fixNotifications() {
+		int id = getIntent().getIntExtra( "notification id", -1 );
+		if ( id != -1 ) {
+			NotificationManager mgr = (NotificationManager) 
+        		getSystemService(NOTIFICATION_SERVICE);		
+			mgr.cancel( id );
+		}
+	}
+	
+    private void setupSetsView() {
+    	mShowcase1 = setupShowcase( R.id.hview, true );
+    	setupShowcase( R.id.hview2, false );
     }
     
-    private DetailedShowcase setupShowcase( int id, Integer[] ids ) {
+    private DetailedShowcase setupShowcase( int id, boolean sets ) {
     	DetailedShowcase showcase = (DetailedShowcase) findViewById( id );
+    	Integer[] ids = mSettings.getSetsIcons( sets );
     	showcase.setAdapter( 
     		new ImageAdapter( mContext, ids ) 
     	);
@@ -102,7 +90,7 @@ public class SetsShowcase extends Activity implements DetailDialogBuilder {
     	
     	NotificationManager mgr = (NotificationManager) 
     		getSystemService(NOTIFICATION_SERVICE);
-    	mgr.notify( not++, mBuilder.build());
+    	mgr.notify( notificationId++, mBuilder.build() );
     }
     
     public void unlock() {
@@ -197,24 +185,30 @@ public class SetsShowcase extends Activity implements DetailDialogBuilder {
 
 	@Override
 	public Dialog buildDialog( Context c, AdapterView<?> a, View v, int p, long i ) {
+		if ( a.equals( mShowcase1 ) ) {
+			return this.buildDialog1( c, a, v, p, i );
+		} else {
+			return this.buildDialog2( c, a, v, p, i );
+		}
+	}
+
+	public Dialog buildDialog1( Context c, AdapterView<?> a, View v, int p, long i ) {
 		mDialog = new Dialog( c );
 		mDialog.requestWindowFeature( Window.FEATURE_NO_TITLE );
 		mDialog.setContentView( R.layout.bugs_dialog );
+		
 		mDialog.setOnCancelListener( mOnDetailDialogCancelListener );
 		
 		GridView bugs = ( GridView ) mDialog.getWindow().findViewById( 
 			R.id.bugsGrid 
 		);
-	/*
 		CheckBox chkUseThis = ( CheckBox ) mDialog.getWindow().findViewById( 
 			R.id.chkUseThis
 		);
 		chkUseThis.setChecked( 
-			mSettings.setsdata[ 
-				mShowcase.getLastClickedPosition() 
-			].usable
+			mSettings.setsdata[ mSettings.getSet( (int)i ) ].usable
 		);
-	*/		
+			
 		bugs.setAdapter(
 			new ImageAdapter( 
 				c,
@@ -227,7 +221,27 @@ public class SetsShowcase extends Activity implements DetailDialogBuilder {
 		
 		return mDialog;
 	}
+
+	public Dialog buildDialog2( Context c, AdapterView<?> a, View v, int p, long i ) {
+		mDialog = new Dialog( c );
+		mDialog.requestWindowFeature( Window.FEATURE_NO_TITLE );
+		mDialog.setContentView( R.layout.bugs_dialog2 );
+		
+		GridView bugs = ( GridView ) mDialog.getWindow().findViewById( 
+			R.id.bugsGrid2
+		);			
+		bugs.setAdapter( getDialogGridAdapter( i ) );
+		return mDialog;
+	}
 	
+	private ImageAdapter getDialogGridAdapter( long i ) {
+		return new ImageAdapter( 
+			mContext,
+			BugsSettings.ids[ mSettings.getSet( (int)i ) ],
+			MyUtils.screenW( mContext ) / 4,
+			MyUtils.screenW( mContext ) / 4
+		);
+	}
 	private OnCancelListener mOnDetailDialogCancelListener = new OnCancelListener() {
 
 		@Override
@@ -235,44 +249,25 @@ public class SetsShowcase extends Activity implements DetailDialogBuilder {
 			CheckBox chkUseThis = ( CheckBox ) mDialog.getWindow().findViewById(
 				R.id.chkUseThis 
 			);
+			int pos = ( int ) mShowcase1.getLastClickedId();
+			int set = mSettings.getSet( pos );
+			mSettings.setsdata[ set ].usable = chkUseThis.isChecked();
 		}		
 	};
+	
+	private OnItemClickListener mOnBugsGridItemClickListener = 
+	new OnItemClickListener() {
+		
+		@Override
+		public void onItemClick( AdapterView<?> a, View v, int p, long i ) {
+			Intent intent = new Intent(
+				SetsShowcase.this, 
+				BugFocus.class 
+			);
+
+			intent.putExtra( "set", mSettings.getSet( (int)i ) );
+			intent.putExtra( "position", p );
+			startActivityForResult( intent, 0 );	
+		}    			
+	};
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

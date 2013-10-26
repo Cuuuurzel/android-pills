@@ -145,7 +145,7 @@ public class Bug extends View {
             public boolean onSingleTapUp( MotionEvent me ) {
     			splatted = true;
     			Bug.this.invalidate();
-    			showNotification();
+    			launchApp();
     			playSplat();
 				return true;            	
             }
@@ -226,28 +226,17 @@ public class Bug extends View {
 		setPaint( p );
 	}
 	
-    public void showNotification() {
+    public void launchApp() {
     	try {
     		Context c = getContext();
         	Log.d( TAG, "Launching " + this.action );
-        	toastAppLaunch();
         	Intent i = c.getPackageManager().getLaunchIntentForPackage( 
         		Bug.this.action 
         	);
+        	i.putExtra( "notification id", this.nid );
         	c.startActivity( i );
     	} catch ( NullPointerException e ) {        		
     	}
-    }
-    
-    private void toastAppLaunch() {
-    	Context c = getContext();
-    	Toast.makeText( 
-    		c, 
-    		c.getResources().getString( 
-    			R.string.app_launch 
-    		), 
-    		Toast.LENGTH_SHORT 
-    	).show();
     }
     
 	public void update( int dt ) {

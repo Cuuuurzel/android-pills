@@ -11,10 +11,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.cuuuurzel.bugs.R;
+import com.cuuuurzel.utils.SerializableSparseIntArray;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.SparseArray;
 
 public class BugsSettings implements Serializable {
 	
@@ -55,7 +55,7 @@ public class BugsSettings implements Serializable {
 
 	public BugInfo[][] bugsdata;
 	public SetInfo[] setsdata;
-	public SparseArray<Integer> setsIds;
+	public SerializableSparseIntArray setsIds;
 	
 	public static BugsSettings getInstance( Context c ) {
 		BugsSettings bs = BugsSettings.getDefault( c );
@@ -187,7 +187,7 @@ public class BugsSettings implements Serializable {
 	}
 	
 	private void setupIdsArray() {
-		setsIds = new SparseArray<Integer>();		
+		setsIds = new SerializableSparseIntArray();
 		for ( int s=0; s<n_sets; s++ ) {
 			for ( int b=0; b<set_lenght; b++ ) {
 				setsIds.append( ids[s][b], s );			

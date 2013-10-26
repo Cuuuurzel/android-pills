@@ -40,9 +40,7 @@ public class BugFocus extends Activity {
 			BugsSettings.ids[ setId ][ mPosition ]
 		); 
 		mSettings = BugsSettings.getInstance( this );
-
-		Log.d( TAG, setId + " " + mPosition );
-		
+		//Log.d( TAG, setId + " " + mPosition );		
 		setupView();
 	}    	
     

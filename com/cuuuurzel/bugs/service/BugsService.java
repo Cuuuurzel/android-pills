@@ -87,6 +87,7 @@ public class BugsService extends Service {
     }
     
 	public void addBug( int id, String pkg ) {
+		Log.d( TAG, "Adding bug!" );
 		if ( mNotifications.indexOfKey( id ) >= 0 ) return;			
 		int[] kind = mSettings.randomBugKind();
 		
