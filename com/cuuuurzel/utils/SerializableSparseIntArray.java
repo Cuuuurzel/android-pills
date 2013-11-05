@@ -10,4 +10,6 @@ import android.util.SparseIntArray;
 public class SerializableSparseIntArray 
 	extends SparseIntArray 
 	implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 }
