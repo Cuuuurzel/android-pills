@@ -1,4 +1,4 @@
 android-pills
 =============
 
-A collection of functions, classes, widget, layouts and so on I use in my applications.
+A collection of classes I use in my applications.
