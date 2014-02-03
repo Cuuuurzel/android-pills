@@ -16,7 +16,7 @@ public class SelectArralAdapter extends ArrayAdapter<CheckableListItem> {
 	private LayoutInflater inflater;
 
 	public SelectArralAdapter(Context context, List<CheckableListItem> planetList) {
-		super(context, R.layout.simplerow, R.id.rowTextView, planetList);
+		super(context, R.layout.checkable_list_view_row, R.id.rowTextView, planetList);
 		// Cache the LayoutInflate to avoid asking for a new one each time.
 		inflater = LayoutInflater.from(context);
 	}
@@ -32,7 +32,7 @@ public class SelectArralAdapter extends ArrayAdapter<CheckableListItem> {
 
 		// Create a new row view
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.simplerow, null);
+			convertView = inflater.inflate(R.layout.checkable_list_view_row, null);
 
 			// Find the child views.
 			textView = (TextView) convertView

@@ -13,9 +13,10 @@ public class CheckableListView extends ListView {
 
 	private ArrayAdapter<CheckableListItem> listAdapter;
 	private ArrayList<CheckableListItem> items;
+	private ArrayList<CheckableListItem> checked;
+	private ArrayList<CheckableListItem> unchecked;
 	
 	private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
-		
 		@Override
 		public void onItemClick( AdapterView<?> parent, View item, int p, long id ) {
 			CheckableListItem planet = listAdapter.getItem( p );
@@ -41,14 +42,19 @@ public class CheckableListView extends ListView {
 	public void setAdapter( ArrayAdapter<CheckableListItem> aa ) {
 		super.setAdapter( aa );
 		
-		this.listAdapter = aa;
 		this.items = new ArrayList<CheckableListItem>();
-		
+		this.checked = new ArrayList<CheckableListItem>();
+		this.unchecked = new ArrayList<CheckableListItem>();
 		CheckableListItem item;
 		
 		for ( int i=0; i<aa.getCount(); i++ ) {
 			item = aa.getItem( i );
 			items.add( item );
+			if ( item.isChecked() ) {
+				checked.add( item );
+			} else {
+				unchecked.add( item );
+			}
 		}
 	}
 	
@@ -57,42 +63,34 @@ public class CheckableListView extends ListView {
 	}
 	
 	public ArrayList<CheckableListItem> getChecked() {
-		ArrayList<CheckableListItem> list = new ArrayList<CheckableListItem>();
-		for ( CheckableListItem item : this.items ) {
-			if ( item.isChecked() ) { list.add( item ); }
-		}
-		return list;
+		return checked;
 	}
 	
 	public ArrayList<CheckableListItem> getUnchecked() {
-		ArrayList<CheckableListItem> list = new ArrayList<CheckableListItem>();
-		for ( CheckableListItem item : this.items ) {
-			if ( !item.isChecked() ) { list.add( item ); }
-		}
-		return list;
+		return unchecked;
 	}
 	
 	public ArrayList<String> getNames() {
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<String>();
 		for ( CheckableListItem item : this.items ) {
-			list.add( item.getName() );
+			names.add( item.getName() );
 		}
-		return list;
+		return names;
 	}
 	
 	public ArrayList<String> getCheckedNames() {
-		ArrayList<String> list = new ArrayList<String>();
-		for ( CheckableListItem item : this.items ) {
-			if ( item.isChecked() ) { list.add( item.getName() ); }
+		ArrayList<String> names = new ArrayList<String>();
+		for ( CheckableListItem item : this.checked ) {
+			names.add( item.getName() );
 		}
-		return list;
+		return names;
 	}
 	
 	public ArrayList<String> getUncheckedNames() {
-		ArrayList<String> list = new ArrayList<String>();
-		for ( CheckableListItem item : this.items ) {
-			if ( !item.isChecked() ) { list.add( item.getName() ); }
+		ArrayList<String> names = new ArrayList<String>();
+		for ( CheckableListItem item : this.unchecked ) {
+			names.add( item.getName() );
 		}
-		return list;
+		return names;
 	}
 }

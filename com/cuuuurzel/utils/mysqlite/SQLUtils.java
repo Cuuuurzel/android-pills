@@ -10,6 +10,8 @@ public class SQLUtils {
 	
 	public static String toString( Cursor c ) {
 		String s = "";
+		int pos = c.getPosition();
+		c.moveToPosition( -1 );
 		
 		while ( c.moveToNext() ) {
 			for ( int j=0; j<c.getColumnCount(); j++ ) {
@@ -35,6 +37,7 @@ public class SQLUtils {
 			}
 			s += "\n";
 		} 
+		c.moveToPosition( pos );
 		return s;
 	}
 }

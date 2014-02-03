@@ -1,5 +1,7 @@
 package com.cuuuurzel.utils;
 
+import java.util.Calendar;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +17,32 @@ import android.view.WindowManager;
  */
 @SuppressLint("DefaultLocale")
 public class MyUtils {
+	
+	/**
+	 * Limit the string lenght to a given number of character.
+	 * Same as limit( s, n, false ).
+	 * @param s, the string.
+	 * @param n, max number of characters.
+	 */
+	public static String limit( String s, int n ) {
+		if ( s.length() <= n ) {
+			return s;
+		} 
+		return s.substring( 0, n );
+	}
+	
+	/**
+	 * Limit the string lenght to a given number of character.
+	 * @param s, the string.
+	 * @param n, max number of characters.
+	 * @param dots, if true will add '...' at the end of the string.
+	 */
+	public static String limit( String s, int n, boolean dots ) {
+		if ( s.length() <= n ) {
+			return s;
+		} 
+		return s.substring( 0, n-3 ) + "...";
+	}
 
 	/**
 	 * Shortcut for verify if a string equals the given one in resources.
@@ -173,5 +201,27 @@ public class MyUtils {
 		} else {
 			return manufacturer + " " + model;
 		}
+	}
+	
+	/**
+	 * Returns hour + minutes*60 from unix time.
+	 */
+	public static int getTimeHM( long unix ) {
+		if ( unix > 24*60*60 ) {
+			Calendar c = Calendar.getInstance();
+			c.setTimeInMillis( unix*1000 );
+			int h = c.get( Calendar.HOUR_OF_DAY );
+			int m = c.get( Calendar.MINUTE );		
+			return h*60 + m;
+		} else {
+			return (int) unix;
+		}
+	}
+
+	/**
+	 * Returns hour + minutes*60 from the current unix time.
+	 */
+	public static int getTimeHM() {
+		return getTimeHM( Calendar.getInstance().getTimeInMillis()/1000 );
 	}
 }
