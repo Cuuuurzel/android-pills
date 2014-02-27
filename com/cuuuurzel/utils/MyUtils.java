@@ -1,16 +1,20 @@
 package com.cuuuurzel.utils;
 
+import java.io.File;
 import java.util.Calendar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 
 /**
  * Set of useful and useless functions.
@@ -19,17 +23,26 @@ import android.view.WindowManager;
 public class MyUtils {
 	
 	/**
-	 * Limit the string lenght to a given number of character.
-	 * Same as limit( s, n, false ).
-	 * @param s, the string.
-	 * @param n, max number of characters.
+	 * Will launch the most appropriate app to show a file to the user, 
 	 */
-	public static String limit( String s, int n ) {
-		if ( s.length() <= n ) {
-			return s;
-		} 
-		return s.substring( 0, n );
+	public static void launchFileViewer( Context c, String path ) {
+		Intent intent = new Intent();
+		intent.setAction(android.content.Intent.ACTION_VIEW);
+		File file = new File( path );
+		intent.setDataAndType( Uri.fromFile(file), MyUtils.getMimeType( path ) );
+		c.startActivity( intent );
 	}
+	
+	
+	/**
+	 * Returns the mime type of a file, given his path\name.
+	 */
+	public static String getMimeType( String url ) {
+        String extension = url.substring( url.lastIndexOf(".") );
+        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
+        return mimeType;
+    }
 	
 	/**
 	 * Limit the string lenght to a given number of character.
@@ -42,6 +55,16 @@ public class MyUtils {
 			return s;
 		} 
 		return s.substring( 0, n-3 ) + "...";
+	}
+
+	/**
+	 * Same as intent.getStringEtra( name ).
+	 * If the string is null the last argument is returned.
+	 */
+	public static String getString( Intent i, String name, String def ) {
+		String s = i.getStringExtra( name );
+		if ( s == null ) return def;
+		return s;
 	}
 
 	/**
