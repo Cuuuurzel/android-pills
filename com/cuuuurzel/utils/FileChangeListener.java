@@ -8,5 +8,5 @@ public interface FileChangeListener {
 	/**
 	 * Called by MyFileObserver objects when an event is reached.
 	 */
-	public void onEvent( int event, String path );
+	public void onEvent(int event, String path);
 }

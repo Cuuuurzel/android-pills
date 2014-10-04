@@ -1,7 +1,10 @@
 package com.cuuuurzel.utils;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,7 +24,39 @@ import android.webkit.MimeTypeMap;
  */
 @SuppressLint("DefaultLocale")
 public class MyUtils {
-	
+
+    /**
+     * Return the bigger between screen height and width.
+     */
+    public static int maxScreenSize( Context c ) {
+        return Math.max( MyUtils.screenW( c ), MyUtils.screenH( c ) );
+    }
+
+    /**
+     * Return the smaller between screen height and width.
+     */
+    public static int minScreenSize( Context c ) {
+        return Math.min( MyUtils.screenW( c ), MyUtils.screenH( c ) );
+    }
+
+    /**
+     * Same as Python's sep.join( arr )
+     */
+    public static String join( String sep, List<String> arr ) {
+        String str = "";
+        for ( String val : arr ) {
+            str += val + sep;
+        }
+        return str.substring( 0, str.length() - sep.length() );
+    }
+
+    /**
+     * Same as Python's sep.join( arr )
+     */
+    public static String join( String sep, String[] arr ) {
+        return join( sep, Arrays.asList(arr) );
+    }
+
 	/**
 	 * Returns a random digit [ 0-9 ].
 	 */
@@ -62,7 +97,7 @@ public class MyUtils {
 	 */
 	public static void launchFileViewer( Context c, String path ) {
 		Intent intent = new Intent();
-		intent.setAction(android.content.Intent.ACTION_VIEW);
+		intent.setAction(Intent.ACTION_VIEW);
 		File file = new File( path );
 		intent.setDataAndType( Uri.fromFile(file), MyUtils.getMimeType( path ) );
 		c.startActivity( intent );
@@ -138,7 +173,21 @@ public class MyUtils {
 		wm.getDefaultDisplay().getSize( p );
 		return p;
 	}
-	
+
+    /**
+     * Return a random number between 0 and screenW.
+     */
+    public static int randomX( Context c ) {
+        return ( int )( Math.random() * screenW( c ) );
+    }
+
+    /**
+     * Return a random number between 0 and screenH.
+     */
+    public static int randomY( Context c ) {
+        return ( int )( Math.random() * screenH( c ) );
+    }
+
 	/**
 	 * Will return a rotated version of the given bitmap.
 	 * Rotation occurs in anti-clockwise.
@@ -259,27 +308,5 @@ public class MyUtils {
 		} else {
 			return manufacturer + " " + model;
 		}
-	}
-	
-	/**
-	 * Returns hour + minutes*60 from unix time.
-	 */
-	public static int getTimeHM( long unix ) {
-		if ( unix > 24*60*60 ) {
-			Calendar c = Calendar.getInstance();
-			c.setTimeInMillis( unix*1000 );
-			int h = c.get( Calendar.HOUR_OF_DAY );
-			int m = c.get( Calendar.MINUTE );		
-			return h*60 + m;
-		} else {
-			return (int) unix;
-		}
-	}
-
-	/**
-	 * Returns hour + minutes*60 from the current unix time.
-	 */
-	public static int getTimeHM() {
-		return getTimeHM( Calendar.getInstance().getTimeInMillis()/1000 );
 	}
 }
